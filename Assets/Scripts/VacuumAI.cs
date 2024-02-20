@@ -7,7 +7,8 @@ public class VacuumAI : MonoBehaviour
 {
 
     private NavMeshAgent agent;
-    private Animator anim;
+    private Animator vacuumAnim;
+    [SerializeField] private Animator vacuumHeadAnim;
 
     private List<Transform> trackedPlayers = new List<Transform>();
     private bool isNearPlayer = false;
@@ -20,7 +21,7 @@ public class VacuumAI : MonoBehaviour
     {
 
         agent = GetComponent<NavMeshAgent>();
-        anim = GetComponentInChildren<Animator>();
+        vacuumAnim = GetComponentInChildren<Animator>();
 
     }
 
@@ -55,7 +56,7 @@ public class VacuumAI : MonoBehaviour
     {
 
         StopAllCoroutines();
-        anim.SetTrigger("Idle");
+        vacuumAnim.SetTrigger("Idle");
         currentPoint = -1;
         isTravellingToPoint = false;
 
@@ -65,6 +66,11 @@ public class VacuumAI : MonoBehaviour
     {
 
         agent.SetDestination(trackedPlayer.position);
+
+        RaycastHit hit;
+        Physics.Raycast(transform.position, trackedPlayer.position - transform.position, out hit);
+
+        vacuumHeadAnim.SetFloat("Blend", Mathf.Clamp(hit.distance / 2.7f, 0f, 1f));
 
     }
 
@@ -115,7 +121,7 @@ public class VacuumAI : MonoBehaviour
         while(Vector3.Distance(patrolPoint, transform.position) >= 0.5f)
             yield return null;
 
-        anim.SetTrigger("Clean");
+        vacuumAnim.SetTrigger("Clean");
         yield return new WaitForSeconds(2.13f);
 
         isTravellingToPoint = false;

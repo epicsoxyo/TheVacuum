@@ -8,6 +8,7 @@ TagManager:
   - PatrolPoint
   - DogToy
   - DogBed
+  - EnemyDetectionZone
   layers:
   - Default
   - TransparentFX

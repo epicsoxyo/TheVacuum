@@ -2,13 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.AI;
 using TMPro;
 
 public class PlayerScript : MonoBehaviour
 {
 
     [SerializeField] private TextMeshProUGUI scoreUI;
-    [SerializeField] private AudioSource whine;
+    private AudioSource whine;
 
     private int score = 0;
     private int totalToys;
@@ -45,25 +46,12 @@ public class PlayerScript : MonoBehaviour
 
     }
 
-    private void OnCollisionEnter(Collision other)
-    {
-        
-        if(other.gameObject.tag == "Enemy") StartCoroutine("TriggerDeath");
-
-    }
-
-    private IEnumerator TriggerDeath()
-    {
-
-        yield return new WaitForSeconds(0.3f);
-        SceneManager.LoadScene(1);
-
-    }
-
     private void OnTriggerEnter(Collider other)
     {
 
-        if(other.CompareTag("DogBed"))
+        if(other.CompareTag("Enemy")) StartCoroutine(TriggerDeath(other.gameObject));
+
+        else if(other.CompareTag("DogBed"))
         {
             if(score == totalToys) StartCoroutine("TriggerWin");
             else
@@ -72,6 +60,30 @@ public class PlayerScript : MonoBehaviour
                 scoreUI.GetComponent<Animator>().SetTrigger("Breathe");
             }
         }
+
+    }
+
+    private IEnumerator TriggerDeath(GameObject lookTarget)
+    {
+
+        Destroy(lookTarget.GetComponent<VacuumAI>());
+        NavMeshAgent nav = lookTarget.transform.parent.gameObject.GetComponent<NavMeshAgent>();
+        nav.speed = 0;
+        nav.isStopped = true;
+
+        float lerpSpeed = 0.95f;
+        float timeElapsed = 0f;
+
+        while(timeElapsed * lerpSpeed < 1f)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(lookTarget.transform.position - transform.position);
+            timeElapsed += Time.deltaTime;
+            transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, timeElapsed * lerpSpeed);
+            yield return null;
+        }
+
+        yield return new WaitForSeconds(0.2f);
+        SceneManager.LoadScene(1);
 
     }
 

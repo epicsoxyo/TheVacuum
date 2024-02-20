@@ -7,14 +7,16 @@ public class PlayerController : MonoBehaviour
 
     private Transform cameraTransform;
 
+    private Animator playerAnim;
+
     [SerializeField] private float movementSpeed;
     [SerializeField] private float rotationSpeed;
 
-    private void Awake()
+    private void Start()
     {
         
-        // playerController = GetComponentInChildren<CharacterController>();
         cameraTransform = GetComponentInChildren<Camera>().transform;
+        playerAnim = GetComponentInChildren<Animator>();
 
     }
 
@@ -47,9 +49,14 @@ public class PlayerController : MonoBehaviour
 
         Vector3.Normalize(input);
 
-        Vector3 movementDirection = transform.TransformDirection(input);
+        if(input.magnitude > 0f)
+        {
+            Vector3 movementDirection = transform.TransformDirection(input);
+            transform.position += movementDirection * movementSpeed * Time.fixedDeltaTime;
 
-        transform.position += movementDirection * movementSpeed * Time.fixedDeltaTime;
+            playerAnim.SetBool("isMoving", true);
+        }
+        else playerAnim.SetBool("isMoving", false);
 
     }
 

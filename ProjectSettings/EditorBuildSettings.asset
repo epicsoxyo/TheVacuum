@@ -4,5 +4,14 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/TheVacuum.unity
+    guid: 9fc0d4010bbf28b4594072e72b8655ab
+  - enabled: 1
+    path: Assets/Scenes/DeathScreen.unity
+    guid: d49cdb6f7825cd24db1ce4b79f6f5a4b
+  - enabled: 1
+    path: Assets/Scenes/WinScreen.unity
+    guid: f06a7d04d8e408c4b804cf3340594e93
   m_configObjects: {}

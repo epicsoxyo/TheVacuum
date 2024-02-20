@@ -85,19 +85,4 @@ public class PlayerController : MonoBehaviour
         return Mathf.Min(angle, maxAngle);
     }
 
-    private void OnCollisionEnter(Collision other)
-    {
-        
-        if(other.gameObject.tag == "Enemy") StartCoroutine("DoDeath");
-
-    }
-
-    private IEnumerator DoDeath()
-    {
-
-        Debug.Log("You were sucked into the void");
-        yield break;
-
-    }
-
 }
